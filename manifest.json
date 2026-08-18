@@ -1,0 +1,17 @@
+{
+  "name": "T.'N.T. Danse — Feuilles de présence",
+  "short_name": "T.'N.T. Présences",
+  "description": "Appel des élèves et remises de documents pour l'association T.'N.T. Danse et Comédie",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0d0916",
+  "theme_color": "#0d0916",
+  "lang": "fr",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
