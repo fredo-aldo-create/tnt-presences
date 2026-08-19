@@ -10,7 +10,7 @@
      l'application Apps Script (celle qui se termine par /exec).
      ═══════════════════════════════════════════════════════════════ -->
 <script>
-  var URL_APPLICATION = "https://script.google.com/macros/s/AKfycbxK6nXqM6-VCabT4tH590BqpwBlvMBif7nwG-YKLwJNzJY_X7FH0NRnOcG7UhB4bQlL/exec";
+  var URL_APPLICATION = "https://script.google.com/macros/s/COLLEZ_VOTRE_URL_ICI/exec";
 </script>
 
 <meta name="description" content="Feuilles de présence de l'association T.'N.T. Danse et Comédie">
@@ -85,7 +85,7 @@
     <h1>Feuilles de présence</h1>
     <p id="message">Ouverture de l'application…</p>
     <div class="barre"><span></span></div>
-    <a class="bouton" id="lien" href="#">Ouvrir maintenant</a>
+    <a class="bouton" id="lien" href="#">Ouvrir l'application</a>
     <div class="aide">
       Pour retrouver l'application d'un seul geste :<br>
       sur Android, menu ⋮ puis « Ajouter à l'écran d'accueil ».<br>
@@ -96,6 +96,7 @@
 <script>
   var lien = document.getElementById('lien');
   var message = document.getElementById('message');
+  var barre = document.querySelector('.barre');
 
   // Service worker : nécessaire pour que Chrome propose « Installer l'application »
   // avec l'icône personnalisée plutôt qu'un raccourci générique.
@@ -103,15 +104,35 @@
     navigator.serviceWorker.register('sw.js').catch(function () {});
   }
 
+  // Est-on lancé depuis l'icône déjà installée (mode « standalone »), ou bien
+  // dans un onglet de navigateur classique ?
+  // - iOS Safari : window.navigator.standalone
+  // - Android / Chrome : window.matchMedia('(display-mode: standalone)')
+  var estInstallee =
+    (window.navigator.standalone === true) ||
+    (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches);
+
   if (URL_APPLICATION.indexOf('COLLEZ_VOTRE_URL_ICI') >= 0) {
     message.textContent = "L'adresse de l'application n'a pas encore été renseignée dans index.html.";
-    document.querySelector('.barre').style.display = 'none';
+    barre.style.display = 'none';
     lien.style.display = 'none';
   } else {
     lien.href = URL_APPLICATION;
-    // Petite pause : le logo reste visible le temps du chargement,
-    // ce qui évite l'impression d'écran blanc.
-    setTimeout(function () { window.location.replace(URL_APPLICATION); }, 700);
+
+    if (estInstallee) {
+      // Lancée depuis l'icône : on file directement vers l'application,
+      // après une courte pause pour éviter l'écran blanc.
+      setTimeout(function () { window.location.replace(URL_APPLICATION); }, 500);
+    } else {
+      // Ouverte dans un navigateur classique : on NE redirige PAS automatiquement.
+      // C'est le moment d'ajouter l'icône à l'écran d'accueil, sans être pressé
+      // par une redirection qui capturerait la mauvaise page.
+      barre.style.display = 'none';
+      message.innerHTML =
+        "Avant d'ouvrir l'application, ajoutez cette page à votre écran d'accueil " +
+        "(voir les instructions ci-dessous) : c'est ce qui donne la bonne icône.<br><br>" +
+        "Vous pouvez aussi ouvrir l'application directement, sans l'installer :";
+    }
   }
 </script>
 </body>
