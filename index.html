@@ -10,7 +10,7 @@
      l'application Apps Script (celle qui se termine par /exec).
      ═══════════════════════════════════════════════════════════════ -->
 <script>
-  var URL_APPLICATION = "https://script.google.com/macros/s/AKfycbxK6nXqM6-VCabT4tH590BqpwBlvMBif7nwG-YKLwJNzJY_X7FH0NRnOcG7UhB4bQlL/exec";
+  var URL_APPLICATION = "https://script.google.com/macros/s/COLLEZ_VOTRE_URL_ICI/exec";
 </script>
 
 <meta name="description" content="Feuilles de présence de l'association T.'N.T. Danse et Comédie">
@@ -96,6 +96,12 @@
 <script>
   var lien = document.getElementById('lien');
   var message = document.getElementById('message');
+
+  // Service worker : nécessaire pour que Chrome propose « Installer l'application »
+  // avec l'icône personnalisée plutôt qu'un raccourci générique.
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js').catch(function () {});
+  }
 
   if (URL_APPLICATION.indexOf('COLLEZ_VOTRE_URL_ICI') >= 0) {
     message.textContent = "L'adresse de l'application n'a pas encore été renseignée dans index.html.";
